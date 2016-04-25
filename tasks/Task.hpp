@@ -32,6 +32,11 @@ namespace trajectory_follower{
 	TrajectoryFollower trajectoryFollower;
         Motion2D motionCommand;
         base::samples::RigidBodyState rbpose;
+        
+        /*
+         * Handler for the gen_lateral operation
+         */
+        virtual void gen_lateral(::base::samples::RigidBodyState const & current_pose, ::base::samples::RigidBodyState const & target_pose, double speed);
 
     public:
         /** TaskContext constructor for Task

@@ -1,6 +1,7 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.cpp */
 
 #include "TurnVelocityToSteerAngleTask.hpp"
+#include <trajectory_follower/Motion2D.hpp>
 
 using namespace trajectory_follower;
 
@@ -42,7 +43,7 @@ bool TurnVelocityToSteerAngleTask::startHook()
 void TurnVelocityToSteerAngleTask::updateHook()
 {
     TurnVelocityToSteerAngleTaskBase::updateHook();
-    base::commands::Motion2D mc;
+    trajectory_follower::Motion2D mc;
     if( _motion_command_in.readNewest( mc ) == RTT::NewData )
     {
         if(fabs(mc.rotation) >  0.0000001) {

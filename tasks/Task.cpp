@@ -55,7 +55,7 @@ void Task::updateHook()
         }
 
         trajectoryFollower.removeTrajectory();
-        _motion_command.write(motionCommand.toBaseMotion2D());
+        _motion_command.write(motionCommand);
 
         return;
     }
@@ -69,6 +69,8 @@ void Task::updateHook()
     
     SubTrajectory subTrajectory;
     if (_holonomic_trajectory.readNewest(subTrajectory, false) == RTT::NewData) {
+        std::cout << "got subTrajectory.." << std::endl;
+        trajectories.clear();
         trajectoryFollower.setNewTrajectory(subTrajectory, robotPose);
     }
 
@@ -102,20 +104,6 @@ void Task::updateHook()
             state(SLAM_POSE_INVALID);
         }
         break;
-    case EXEC_TURN_ON_SPOT:
-        if(state() != TURN_ON_SPOT)
-        {
-            LOG_INFO_S << "update TrajectoryFollowerTask state to TURN_ON_SPOT.";
-            state(TURN_ON_SPOT);
-        }
-        break;
-    case EXEC_LATERAL:
-        if(state() != LATERAL)
-        {
-            LOG_INFO_S << "update TrajectoryFollowerTask state to LATERAL.";
-            state(LATERAL);
-        }
-        break;
     case INITIAL_STABILITY_FAILED:
         if(state() != STABILITY_FAILED)
         {
@@ -128,7 +116,7 @@ void Task::updateHook()
     }
     
     _follower_data.write(trajectoryFollower.getData());
-    _motion_command.write(motionCommand.toBaseMotion2D());
+    _motion_command.write(motionCommand);
 }
 
 void Task::errorHook()
@@ -141,7 +129,7 @@ void Task::stopHook()
     motionCommand.translation = 0;
     motionCommand.rotation    = 0;
     motionCommand.heading     = 0;
-    _motion_command.write(motionCommand.toBaseMotion2D());
+    _motion_command.write(motionCommand);
 
     TaskBase::stopHook();
 }
@@ -149,4 +137,21 @@ void Task::stopHook()
 void Task::cleanupHook()
 {
     TaskBase::cleanupHook();
+}
+
+void Task::gen_lateral(const base::samples::RigidBodyState& current_pose, const ::base::samples::RigidBodyState& target_pose, double speed)
+{
+    base::Pose2D curPos;
+    curPos.position.x() = current_pose.position.x();
+    curPos.position.y() = current_pose.position.y();
+    curPos.orientation = current_pose.getYaw();
+    
+    base::Position2D tarPos;
+    tarPos.x() = target_pose.position.x();
+    tarPos.y() = target_pose.position.y();
+    
+    Lateral lateralTrajectory(curPos, tarPos, speed);
+    base::Pose robotPose = base::Pose(current_pose.position, current_pose.orientation);
+    trajectoryFollower.setNewTrajectory(lateralTrajectory, robotPose);
+    updateHook();
 }
