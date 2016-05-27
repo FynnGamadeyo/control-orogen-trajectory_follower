@@ -44,7 +44,7 @@ void Task::updateHook()
 
     motionCommand.translation = 0;
     motionCommand.rotation    = 0;
-    motionCommand.heading     = 0;
+    motionCommand.heading     =  base::Angle::fromRad(0);
 
     if( _robot_pose.readNewest( rbpose ) == RTT::NoData)
     {
@@ -128,7 +128,7 @@ void Task::stopHook()
 {
     motionCommand.translation = 0;
     motionCommand.rotation    = 0;
-    motionCommand.heading     = 0;
+    motionCommand.heading     = base::Angle::fromRad(0);
     _motion_command.write(motionCommand);
 
     TaskBase::stopHook();

@@ -1,7 +1,7 @@
 /* Generated from orogen/lib/orogen/templates/tasks/Task.cpp */
 
 #include "TurnVelocityToSteerAngleTask.hpp"
-#include <trajectory_follower/Motion2D.hpp>
+#include <base/commands/Motion2D.hpp>
 
 using namespace trajectory_follower;
 
