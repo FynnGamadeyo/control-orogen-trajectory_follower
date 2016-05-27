@@ -8,7 +8,6 @@ using_library "base-lib"
 
 import_types_from "trajectory_follower/TrajectoryFollowerTypes.hpp"
 import_types_from "trajectory_follower/SubTrajectory.hpp"
-import_types_from "trajectory_follower/Motion2D.hpp"
 
 task_context "Task" do
 
@@ -25,7 +24,7 @@ task_context "Task" do
         doc "Position and orientation of the Robot"
 
     # Output ports
-    output_port("motion_command", "trajectory_follower/Motion2D").
+    output_port("motion_command", "base/commands/Motion2D").
         doc "Drive command that should steer the robot to the target Pose"
 
     output_port("follower_data", "trajectory_follower/FollowerData").
@@ -62,11 +61,11 @@ task_context "TurnVelocityToSteerAngleTask" do
 	doc "Steering angle upper limit in radians"
 
     # Input ports
-    input_port("motion_command_in", "trajectory_follower/Motion2D").
+    input_port("motion_command_in", "base/commands/Motion2D").
         doc "Motion command as forward velocity and turn velocity"
 
     # Output ports
-    output_port("motion_command", "trajectory_follower/Motion2D").
+    output_port("motion_command", "base/commands/Motion2D").
         doc "Motion command as forward velocity and steering angle"
 
     needs_configuration
